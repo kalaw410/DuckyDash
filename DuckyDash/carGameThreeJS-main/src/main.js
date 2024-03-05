@@ -107,16 +107,9 @@ function animate(){
   cubeThree1.quaternion.copy(cubeBody.quaternion);
 
   cubeThree2.position.copy(cubeBody.position);
-  cubeThree2.position.x = cubeBody.position.x - 0.6;
-  cubeThree2.position.y = cubeBody.position.y + 0.9;
-  cubeThree2.position.z = cubeBody.position.z - 0.5;
+  cubeThree2.position.y = cubeBody.position.y - 1.3;
   cubeThree2.quaternion.copy(cubeBody.quaternion);
 
-  cubeThree3.position.copy(cubeBody.position);
-  cubeThree3.position.x = cubeBody.position.x + 0.6;
-  cubeThree3.position.y = cubeBody.position.y + 0.9;
-  cubeThree3.position.z = cubeBody.position.z - 0.5;
-  cubeThree3.quaternion.copy(cubeBody.quaternion);
 
   for (let i = 0; i < obstaclesBodies.length; i++) {
     obstaclesMeshes[i].position.copy(obstaclesBodies[i].position);
@@ -153,11 +146,11 @@ async function addCube(){
 	cubeThree = carLoaddedd.scene.children[0];
   cubeThree1 = carLoaddedd.scene.children[1];
   cubeThree2 = carLoaddedd.scene.children[2];
-  cubeThree3 = carLoaddedd.scene.children[3];
+  
   scene.add(cubeThree);
   scene.add(cubeThree1);
   scene.add(cubeThree2);
-  scene.add(cubeThree3);
+  
 }
 
 
