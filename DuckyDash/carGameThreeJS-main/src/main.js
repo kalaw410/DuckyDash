@@ -30,6 +30,10 @@ let slipperyMaterial, groundMaterial;
 let obstacleBody;
 let obstaclesBodies = [];
 let obstaclesMeshes = [];
+
+let planeLength = 200; // Initial length of the plane
+let planeSegmentLength = 200; // Length of each plane segment
+
 init();
 
   //______________________________________________________
@@ -85,6 +89,11 @@ async function init() {
   addKeysListener();
 	addGUI();
 
+  // Add more plane segments initially
+  for (let i = 0; i < 5; i++) {
+    addPlaneSegment(i * planeSegmentLength);
+  }
+
   animate()
 }
 
@@ -123,8 +132,44 @@ function animate(){
 		obstaclesMeshes[i].quaternion.copy(obstaclesBodies[i].quaternion);
 	}
 
+  // Check if the character has moved to a new plane segment
+  const currentSegment = Math.floor((cubeBody.position.z + planeLength / 2) / planeSegmentLength);
+
+  // If the character is on a new segment, add a new plane segment
+  if (currentSegment > 0) {
+    addPlaneSegment(currentSegment * planeSegmentLength);
+  }
+
+  // Remove old plane segments (adjust the number based on your needs)
+  if (currentSegment > 5) {
+    removePlaneSegment((currentSegment - 5) * planeSegmentLength);
+  }
+
 	requestAnimationFrame(animate);
 
+}
+
+function addPlaneSegment(positionZ) {
+  const planeShape = new CANNON.Box(new CANNON.Vec3(10, 0.01, planeSegmentLength));
+  const segmentBody = new CANNON.Body({ mass: 0, material: groundMaterial });
+  segmentBody.addShape(planeShape);
+  segmentBody.position.set(0, 0, positionZ);
+  world.addBody(segmentBody);
+
+  const texture = new THREE.TextureLoader().load("src/assets/plane.jpg");
+  const geometry = new THREE.BoxGeometry(20, 0, planeSegmentLength);
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const planeSegmentThree = new THREE.Mesh(geometry, material);
+  planeSegmentThree.position.set(0, 0, positionZ);
+  scene.add(planeSegmentThree);
+}
+
+function removePlaneSegment(positionZ) {
+  const segmentIndex = Math.floor(positionZ / planeSegmentLength);
+  const segmentToRemove = scene.getObjectByName("planeSegment_" + segmentIndex);
+  if (segmentToRemove) {
+    scene.remove(segmentToRemove);
+  }
 }
 
 function addCubeBody(){
@@ -170,8 +215,6 @@ function addPlaneBody(){
 	world.addBody(planeBody);
 }
 
-
-
 function addPlane(){
   const texture = new THREE.TextureLoader().load( "src/assets/plane.jpg" );
 
@@ -183,7 +226,6 @@ function addPlane(){
 }
 
 function addObstacleBody(){
-
   for (let i = 0; i < 5; i++) {
     let obstacleShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
     obstacleBody = new CANNON.Body({ mass: 1 });
@@ -197,7 +239,6 @@ function addObstacleBody(){
 }
 
 function addObstacle(){
- 
   let geometry = new THREE.BoxGeometry(2,2,2);
   const texture = new THREE.TextureLoader().load( "src/assets/obstacle.png" );
 
@@ -272,8 +313,10 @@ function movePlayer() {
   // Limit the movement along the X axis
   cubeBody.position.x = Math.max(Math.min(cubeBody.position.x, 9), -9);
 
-  // Limit the movement along the Z axis (forward and backward)
-  cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, 90), -90);
+  // Adjust the limit based on the total length of your plane
+  const totalPlaneLength = 2000; // Update this value with the actual total length of your plane
+  cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, totalPlaneLength / 2), -totalPlaneLength / 2);
+
 }
 
 
