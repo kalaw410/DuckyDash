@@ -31,9 +31,6 @@ let obstacleBody;
 let obstaclesBodies = [];
 let obstaclesMeshes = [];
 
-let planeLength = 200; // Initial length of the plane
-let planeSegmentLength = 200; // Length of each plane segment
-
 init();
 
   //______________________________________________________
@@ -89,11 +86,6 @@ async function init() {
   addKeysListener();
 	addGUI();
 
-  // Add more plane segments initially
-  for (let i = 0; i < 5; i++) {
-    addPlaneSegment(i * planeSegmentLength);
-  }
-
   animate()
 }
 
@@ -125,44 +117,7 @@ function animate(){
 		obstaclesMeshes[i].quaternion.copy(obstaclesBodies[i].quaternion);
 	}
 
-  // Check if the character has moved to a new plane segment
-  const currentSegment = Math.floor((cubeBody.position.z + planeLength / 2) / planeSegmentLength);
-
-  // If the character is on a new segment, add a new plane segment
-  if (currentSegment > 0) {
-    addPlaneSegment(currentSegment * planeSegmentLength);
-  }
-
-  // Remove old plane segments (adjust the number based on your needs)
-  if (currentSegment > 5) {
-    removePlaneSegment((currentSegment - 5) * planeSegmentLength);
-  }
-
 	requestAnimationFrame(animate);
-
-}
-
-function addPlaneSegment(positionZ) {
-  const planeShape = new CANNON.Box(new CANNON.Vec3(10, 0.01, planeSegmentLength));
-  const segmentBody = new CANNON.Body({ mass: 0, material: groundMaterial });
-  segmentBody.addShape(planeShape);
-  segmentBody.position.set(0, 0, positionZ);
-  world.addBody(segmentBody);
-
-  const texture = new THREE.TextureLoader().load("src/assets/plane.jpg");
-  const geometry = new THREE.BoxGeometry(20, 0, planeSegmentLength);
-  const material = new THREE.MeshBasicMaterial({ map: texture });
-  const planeSegmentThree = new THREE.Mesh(geometry, material);
-  planeSegmentThree.position.set(0, 0, positionZ);
-  scene.add(planeSegmentThree);
-}
-
-function removePlaneSegment(positionZ) {
-  const segmentIndex = Math.floor(positionZ / planeSegmentLength);
-  const segmentToRemove = scene.getObjectByName("planeSegment_" + segmentIndex);
-  if (segmentToRemove) {
-    scene.remove(segmentToRemove);
-  }
 }
 
 function addCubeBody(){
@@ -211,7 +166,7 @@ function addPlaneBody(){
 function addPlane(){
   const texture = new THREE.TextureLoader().load( "src/assets/plane.jpg" );
 
-  let geometry =  new THREE.BoxGeometry(20, 0, 200);
+  let geometry =  new THREE.BoxGeometry(20, 0, 2000);
   let material = new THREE.MeshBasicMaterial({map: texture});
   let planeThree = new THREE.Mesh(geometry, material);
   planeThree.position.set(0, 0, -90);
@@ -231,7 +186,7 @@ function addObstacleBody(){
   }
 }
 
-function addObstacle(){
+/*function addObstacle(){
   let geometry = new THREE.BoxGeometry(2,2,2);
   const texture = new THREE.TextureLoader().load( "src/assets/obstacle.png" );
 
@@ -244,7 +199,25 @@ function addObstacle(){
 		scene.add(obstacleMesh);
 		obstaclesMeshes.push(obstacleMesh);
 	}
+}*/
+
+function addObstacle() {
+  const radius = 1; // Adjust the radius based on your desired size
+  const tubeRadius = 0.7; // Adjust the tube radius based on your desired size
+  const radialSegments = 16; // Number of segments in the torus
+  const tubularSegments = 16; // Number of segments around the tube
+
+  const geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
+  const texture = new THREE.TextureLoader().load("src/assets/donut.png");
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+
+  for (let i = 0; i < 5; i++) {
+    let obstacleMesh = new THREE.Mesh(geometry, material);
+    scene.add(obstacleMesh);
+    obstaclesMeshes.push(obstacleMesh);
+  }
 }
+
 
 
 function addContactMaterials(){
@@ -273,17 +246,13 @@ function addKeysListener(){
 
 let laneSwitched = false; // Add this variable to track lane switch
 
-function movePlayer() {
+/*function movePlayer() {
   const strengthWS = 1000;
   const laneWidth = 6.6; // Adjust this value based on your desired lane width
 
   // Forward movement
   const forceForward = new CANNON.Vec3(0, 0, strengthWS);
   cubeBody.applyLocalForce(forceForward);
-
-  // Backward movement
-  const forceBack = new CANNON.Vec3(0, 0, -strengthWS);
-  if (keyboard[83]) cubeBody.applyLocalForce(forceBack);
 
   // Left lane switch
   const strengthAD = 200;
@@ -310,6 +279,41 @@ function movePlayer() {
   const totalPlaneLength = 2000; // Update this value with the actual total length of your plane
   cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, totalPlaneLength / 2), -totalPlaneLength / 2);
 
+}*/
+
+function movePlayer() {
+  const strengthWS = 1000;
+  const laneWidth = 6.6; // Adjust this value based on your desired lane width
+  const maxXCoordinate = 2000; // Set the maximum x-coordinate limit
+  const maxZCoordinate = 1000; // Set the maximum z-coordinate limit
+
+  // Forward movement
+  const forceForward = new CANNON.Vec3(0, 0, strengthWS);
+  cubeBody.applyLocalForce(forceForward);
+
+  // Left lane switch
+  const strengthAD = 200;
+  if (keyboard[65] && !laneSwitched) {
+    cubeBody.position.x = Math.max(cubeBody.position.x - laneWidth, -maxXCoordinate);
+    laneSwitched = true; // Set the flag to true to prevent continuous sliding
+  }
+
+  // Right lane switch
+  if (keyboard[68] && !laneSwitched) {
+    cubeBody.position.x = Math.min(cubeBody.position.x + laneWidth, maxXCoordinate);
+    laneSwitched = true; // Set the flag to true to prevent continuous sliding
+  }
+
+  // Reset the lane switch flag when the key is released
+  if (!keyboard[65] && !keyboard[68]) {
+    laneSwitched = false;
+  }
+
+  // Limit the movement along the X axis
+  cubeBody.position.x = Math.max(Math.min(cubeBody.position.x, maxXCoordinate), -maxXCoordinate);
+
+  // Limit the movement along the Z axis
+  cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, maxZCoordinate / 2), -maxZCoordinate / 2);
 }
 
 
