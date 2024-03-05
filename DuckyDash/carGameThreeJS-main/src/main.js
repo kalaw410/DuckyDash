@@ -70,7 +70,7 @@ async function init() {
 
   initCannon();
 
-  //addBackground();
+  addBackground();
 
   addPlaneBody();
   addPlane();
@@ -384,7 +384,7 @@ function createCustomShape(){
 	})
 }
 
-async function addBackground(){
+/*async function addBackground(){
 	const gltfLoader = new GLTFLoader().setPath( 'src/assets/' );
 
 	const mountainLoaded = await gltfLoader.loadAsync( 'mountain.glb' );
@@ -400,4 +400,14 @@ async function addBackground(){
 	domeMesh.position.set(0, -40, 0);
 	domeMesh.scale.set(0.1, 0.1, 0.1);
 	scene.add(domeMesh);
+}*/
+
+function addBackground() {
+  const texture = new THREE.TextureLoader().load('src/assets/mountains.jpg');
+  const planeGeometry = new THREE.PlaneGeometry(600, 500);
+  const planeMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+
+  const backgroundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+  backgroundPlane.position.set(0, 60, -90); // Adjust the position based on your scene
+  scene.add(backgroundPlane);
 }
