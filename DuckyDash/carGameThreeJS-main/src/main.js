@@ -280,7 +280,7 @@ function addKeysListener(){
 let laneSwitched = false;
 
 function movePlayer() {
-  const strengthWS = 2000;
+  const strengthWS = 5000;
   const laneWidth = 6.5; // Adjust this value based on your desired lane width
   const maxCoordinate = 20000; // Set the maximum x-coordinate limit
 
