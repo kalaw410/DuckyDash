@@ -82,6 +82,7 @@ async function init() {
   addObstacleBody();
   addObstacle();
 
+  addObstacleBody();
   addObstacle2();
 
   addContactMaterials();
@@ -193,8 +194,8 @@ function addPlane(){
   scene.add(planeThree);
 }
 
-function addObstacleBody(){
-  for (let i = 0; i < 1000; i++) {
+/*function addObstacleBody(){
+  for (let i = 0; i < 500; i++) {
     var randomXOptions = [-7, 0, 7];
     var randomXIndex = Math.floor(Math.random() * randomXOptions.length);
     var randomX = randomXOptions[randomXIndex];
@@ -217,7 +218,40 @@ function addObstacleBody(){
     obstaclesBodies.push(obstacleBody);
 
   }
+}*/
+
+function addObstacleBody() {
+  const lanes = [-7, 0, 7];
+  const maxObstacles = 500;
+  const obstacleSpacing = 40;
+
+  for (let i = 0; i < maxObstacles; i++) {
+    const randomXIndex = Math.floor(Math.random() * lanes.length);
+    const randomX = lanes[randomXIndex];
+
+    let obstacleShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
+    obstacleBody = new CANNON.Body({ mass: 0.2 });
+    obstacleBody.addShape(obstacleShape);
+
+    // Adjust the spacing based on the obstacle index
+    let obstacleZ;
+    if (i <= 100) {
+      obstacleZ = -(i + 1) * obstacleSpacing;
+    } else if (i <= 600) {
+      obstacleZ = -(i + 1) * (obstacleSpacing / 1.5);
+    } else {
+      obstacleZ = -(i + 1) * (obstacleSpacing / 2);
+    }
+
+    obstacleBody.linearDamping = 0.5;
+    obstacleBody.angularDamping = 1; // Set angularDamping to 1 to prevent rotation
+
+    obstacleBody.position.set(randomX, 5, obstacleZ);
+    world.addBody(obstacleBody);
+    obstaclesBodies.push(obstacleBody);
+  }
 }
+
 
 function addObstacle() {
   const radius = 1; 
@@ -229,14 +263,14 @@ function addObstacle() {
   const texture = new THREE.TextureLoader().load("src/assets/donut.png");
   const material = new THREE.MeshBasicMaterial({ map: texture });
 
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 500; i++) {
     let obstacleMesh = new THREE.Mesh(geometry, material);
     scene.add(obstacleMesh);
     obstaclesMeshes.push(obstacleMesh);
   }
 }
 
-/*function addObstacle2(){
+function addObstacle2(){
   let geometry = new THREE.BoxGeometry(2,2,2);
   const texture = new THREE.TextureLoader().load( "src/assets/obstacle.png" );
 
@@ -244,44 +278,11 @@ function addObstacle() {
 
   let obstacle = new THREE.Mesh(geometry, material);
 
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 500; i++) {
 		let obstacleMesh = obstacle.clone();
 		scene.add(obstacleMesh);
 		obstaclesMeshes.push(obstacleMesh);
 	}
-}*/
-
-function addObstacle2() {
-  let geometry = new THREE.BoxGeometry(2, 2, 2);
-  const texture = new THREE.TextureLoader().load("src/assets/obstacle.png");
-  let material = new THREE.MeshBasicMaterial({ map: texture });
-
-  let obstacle = new THREE.Mesh(geometry, material);
-
-  for (let i = 0; i < 1000; i++) {
-    let obstacleMesh = obstacle.clone();
-
-    // Calculate a different random X position for obstacle2
-    let randomXOptions = [-7, 0, 7];
-    let randomXIndex = Math.floor(Math.random() * randomXOptions.length);
-    let randomX = randomXOptions[randomXIndex];
-
-    // Ensure obstacle2 is at least a certain distance away from obstacle1
-    const minDistance = 5;
-    while (Math.abs(randomX - obstaclesBodies[i].position.x) < minDistance) {
-      randomXIndex = Math.floor(Math.random() * randomXOptions.length);
-      randomX = randomXOptions[randomXIndex];
-    }
-
-    // Set the initial Y position of obstacle2
-    obstacleMesh.position.set(randomX, 0, -(i + 1) * 15);
-
-    // Adjust the Y position based on your preferences
-    obstacleMesh.position.y = Math.max(obstacleMesh.position.y, 2);
-
-    scene.add(obstacleMesh);
-    obstaclesMeshes.push(obstacleMesh);
-  }
 }
 
 
@@ -421,7 +422,6 @@ window.addEventListener('keydown', function(event) {
   }
 }, false);
 
-// Function to restart the game
 function restartGame() {
   // Reset game state
   gameState = 'running';
@@ -444,6 +444,7 @@ function restartGame() {
   addObstacleBody();
   addObstacle();
 
+  addObstacleBody();
   addObstacle2();
 
   // Continue the animation loop
