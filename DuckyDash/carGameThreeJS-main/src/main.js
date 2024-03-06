@@ -135,9 +135,11 @@ function addCubeBody(){
   cubeBody.position.set(0, 2, 0);
 
   cubeBody.linearDamping = 0.5;
+  cubeBody.angularDamping = 1; // Set angularDamping to 1 to prevent rotation
 
   world.addBody(cubeBody);
 }
+
 
 async function addCube(){
   const gltfLoader = new GLTFLoader().setPath( 'src/assets/' );
@@ -233,9 +235,8 @@ let laneSwitched = false;
 
 function movePlayer() {
   const strengthWS = 1000;
-  const laneWidth = 6.6; // Adjust this value based on your desired lane width
-  const maxXCoordinate = 2000; // Set the maximum x-coordinate limit
-  const maxZCoordinate = 1000; // Set the maximum z-coordinate limit
+  const laneWidth = 8.5; // Adjust this value based on your desired lane width
+  const maxCoordinate = 20000; // Set the maximum x-coordinate limit
 
   // Forward movement
   const forceForward = new CANNON.Vec3(0, 0, strengthWS);
@@ -244,13 +245,13 @@ function movePlayer() {
   // Left lane switch
   const strengthAD = 200;
   if (keyboard[65] && !laneSwitched) {
-    cubeBody.position.x = Math.max(cubeBody.position.x - laneWidth, -maxXCoordinate);
+    cubeBody.position.x = Math.max(cubeBody.position.x - laneWidth, -maxCoordinate);
     laneSwitched = true; // Set the flag to true to prevent continuous sliding
   }
 
   // Right lane switch
   if (keyboard[68] && !laneSwitched) {
-    cubeBody.position.x = Math.min(cubeBody.position.x + laneWidth, maxXCoordinate);
+    cubeBody.position.x = Math.min(cubeBody.position.x + laneWidth, maxCoordinate);
     laneSwitched = true; // Set the flag to true to prevent continuous sliding
   }
 
@@ -260,10 +261,14 @@ function movePlayer() {
   }
 
   // Limit the movement along the X axis
-  cubeBody.position.x = Math.max(Math.min(cubeBody.position.x, maxXCoordinate), -maxXCoordinate);
+  cubeBody.position.x = Math.max(Math.min(cubeBody.position.x, 9), -9);
+
+  // Limit the movement along the Y axis
+  cubeBody.position.y = Math.max(Math.min(cubeBody.position.y, maxCoordinate), 0);
+
 
   // Limit the movement along the Z axis
-  cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, maxZCoordinate / 2), -maxZCoordinate / 2);
+  cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, maxCoordinate / 2), -maxCoordinate / 2);
 }
 
 
