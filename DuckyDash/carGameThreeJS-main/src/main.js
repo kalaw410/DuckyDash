@@ -47,6 +47,7 @@ async function init() {
 	renderer = new THREE.WebGLRenderer();
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0xeeeeee);
 
   // light
   const light = new THREE.HemisphereLight(0xffffbb, 0x080820);
@@ -70,7 +71,7 @@ async function init() {
 
   initCannon();
 
-  addBackground();
+  // addBackground();
 
   addPlaneBody();
   addPlane();
@@ -156,7 +157,7 @@ async function addCube(){
 
 function addPlaneBody(){
   groundMaterial = new CANNON.Material('ground')
-  const planeShape = new CANNON.Box(new CANNON.Vec3(10, 0.01, 100));
+  const planeShape = new CANNON.Box(new CANNON.Vec3(20, 0.01, 10000));
 	planeBody = new CANNON.Body({ mass: 0, material: groundMaterial });
 	planeBody.addShape(planeShape);
 	planeBody.position.set(0, 0, -90);
@@ -166,7 +167,7 @@ function addPlaneBody(){
 function addPlane(){
   const texture = new THREE.TextureLoader().load( "src/assets/plane.jpg" );
 
-  let geometry =  new THREE.BoxGeometry(20, 0, 2000);
+  let geometry =  new THREE.BoxGeometry(20, 0, 10000);
   let material = new THREE.MeshBasicMaterial({map: texture});
   let planeThree = new THREE.Mesh(geometry, material);
   planeThree.position.set(0, 0, -90);
@@ -174,11 +175,15 @@ function addPlane(){
 }
 
 function addObstacleBody(){
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 1000; i++) {
+    var randomXOptions = [-5, 0, 5];
+    var randomXIndex = Math.floor(Math.random() * randomXOptions.length);
+    var randomX = randomXOptions[randomXIndex];
+
     let obstacleShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
     obstacleBody = new CANNON.Body({ mass: 1 });
     obstacleBody.addShape(obstacleShape);
-		obstacleBody.position.set(0, 5,-(i+1) * 15);
+		obstacleBody.position.set(randomX, 5,-(i+1) * 15);
 
     world.addBody(obstacleBody);
     obstaclesBodies.push(obstacleBody);
@@ -196,7 +201,7 @@ function addObstacle() {
   const texture = new THREE.TextureLoader().load("src/assets/donut.png");
   const material = new THREE.MeshBasicMaterial({ map: texture });
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 1000; i++) {
     let obstacleMesh = new THREE.Mesh(geometry, material);
     scene.add(obstacleMesh);
     obstaclesMeshes.push(obstacleMesh);
