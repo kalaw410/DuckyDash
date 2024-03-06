@@ -186,26 +186,11 @@ function addObstacleBody(){
   }
 }
 
-/*function addObstacle(){
-  let geometry = new THREE.BoxGeometry(2,2,2);
-  const texture = new THREE.TextureLoader().load( "src/assets/obstacle.png" );
-
-  let material = new THREE.MeshBasicMaterial({ map: texture});
-
-  let obstacle = new THREE.Mesh(geometry, material);
-
-  for (let i = 0; i < 5; i++) {
-		let obstacleMesh = obstacle.clone();
-		scene.add(obstacleMesh);
-		obstaclesMeshes.push(obstacleMesh);
-	}
-}*/
-
 function addObstacle() {
-  const radius = 1; // Adjust the radius based on your desired size
-  const tubeRadius = 0.7; // Adjust the tube radius based on your desired size
-  const radialSegments = 16; // Number of segments in the torus
-  const tubularSegments = 16; // Number of segments around the tube
+  const radius = 1; 
+  const tubeRadius = 0.7;
+  const radialSegments = 16;
+  const tubularSegments = 16; 
 
   const geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
   const texture = new THREE.TextureLoader().load("src/assets/donut.png");
@@ -244,42 +229,7 @@ function addKeysListener(){
 }
 
 
-let laneSwitched = false; // Add this variable to track lane switch
-
-/*function movePlayer() {
-  const strengthWS = 1000;
-  const laneWidth = 6.6; // Adjust this value based on your desired lane width
-
-  // Forward movement
-  const forceForward = new CANNON.Vec3(0, 0, strengthWS);
-  cubeBody.applyLocalForce(forceForward);
-
-  // Left lane switch
-  const strengthAD = 200;
-  if (keyboard[65] && !laneSwitched) {
-    cubeBody.position.x = Math.max(cubeBody.position.x - laneWidth, -9);
-    laneSwitched = true; // Set the flag to true to prevent continuous sliding
-  }
-
-  // Right lane switch
-  if (keyboard[68] && !laneSwitched) {
-    cubeBody.position.x = Math.min(cubeBody.position.x + laneWidth, 9);
-    laneSwitched = true; // Set the flag to true to prevent continuous sliding
-  }
-
-  // Reset the lane switch flag when the key is released
-  if (!keyboard[65] && !keyboard[68]) {
-    laneSwitched = false;
-  }
-
-  // Limit the movement along the X axis
-  cubeBody.position.x = Math.max(Math.min(cubeBody.position.x, 9), -9);
-
-  // Adjust the limit based on the total length of your plane
-  const totalPlaneLength = 2000; // Update this value with the actual total length of your plane
-  cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, totalPlaneLength / 2), -totalPlaneLength / 2);
-
-}*/
+let laneSwitched = false;
 
 function movePlayer() {
   const strengthWS = 1000;
@@ -387,13 +337,6 @@ function createCustomShape(){
 async function addBackground(){
 	const gltfLoader = new GLTFLoader().setPath( 'src/assets/' );
 
-	// const mountainLoaded = await gltfLoader.loadAsync( 'mountain.glb' );
-	// let mountainMesh = mountainLoaded.scene.children[0];
-	// mountainMesh.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 180 *90);
-	// mountainMesh.position.set(0, 60, -90);
-	// mountainMesh.scale.set(0.008,0.008,0.008);
-	// scene.add(mountainMesh);
-
 	const domeLoaded = await gltfLoader.loadAsync( 'skydome.glb' );
 	let domeMesh = domeLoaded.scene.children[0];
 	domeMesh.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 180 *90);
@@ -401,17 +344,7 @@ async function addBackground(){
 	domeMesh.scale.set(0.1, 0.1, 0.1);
 	scene.add(domeMesh);
 
-  const light = new THREE.DirectionalLight(0xFFFFFF, 5);
+  const light = new THREE.DirectionalLight(0x33F9FF, 5);
   light.position.set(0, -150, 0);
   scene.add(light);
 }
-
-// function addBackground() {
-//   const texture = new THREE.TextureLoader().load('src/assets/mountains.jpg');
-//   const planeGeometry = new THREE.PlaneGeometry(600, 500);
-//   const planeMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-
-//   const backgroundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
-//   backgroundPlane.position.set(0, 60, -90); // Adjust the position based on your scene
-//   scene.add(backgroundPlane);
-// }
