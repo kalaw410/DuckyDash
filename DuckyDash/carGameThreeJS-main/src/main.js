@@ -384,30 +384,34 @@ function createCustomShape(){
 	})
 }
 
-/*async function addBackground(){
+async function addBackground(){
 	const gltfLoader = new GLTFLoader().setPath( 'src/assets/' );
 
-	const mountainLoaded = await gltfLoader.loadAsync( 'mountain.glb' );
-	let mountainMesh = mountainLoaded.scene.children[0];
-	mountainMesh.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 180 *90);
-	mountainMesh.position.set(0, 60, -90);
-	mountainMesh.scale.set(0.008,0.008,0.008);
-	scene.add(mountainMesh);
+	// const mountainLoaded = await gltfLoader.loadAsync( 'mountain.glb' );
+	// let mountainMesh = mountainLoaded.scene.children[0];
+	// mountainMesh.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 180 *90);
+	// mountainMesh.position.set(0, 60, -90);
+	// mountainMesh.scale.set(0.008,0.008,0.008);
+	// scene.add(mountainMesh);
 
 	const domeLoaded = await gltfLoader.loadAsync( 'skydome.glb' );
 	let domeMesh = domeLoaded.scene.children[0];
 	domeMesh.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 180 *90);
-	domeMesh.position.set(0, -40, 0);
+	domeMesh.position.set(0, -150, 0);
 	domeMesh.scale.set(0.1, 0.1, 0.1);
 	scene.add(domeMesh);
-}*/
 
-function addBackground() {
-  const texture = new THREE.TextureLoader().load('src/assets/mountains.jpg');
-  const planeGeometry = new THREE.PlaneGeometry(600, 500);
-  const planeMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-
-  const backgroundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
-  backgroundPlane.position.set(0, 60, -90); // Adjust the position based on your scene
-  scene.add(backgroundPlane);
+  const light = new THREE.DirectionalLight(0x33F9FF, 5);
+  light.position.set(0, -150, 0);
+  scene.add(light);
 }
+
+// function addBackground() {
+//   const texture = new THREE.TextureLoader().load('src/assets/mountains.jpg');
+//   const planeGeometry = new THREE.PlaneGeometry(600, 500);
+//   const planeMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+
+//   const backgroundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+//   backgroundPlane.position.set(0, 60, -90); // Adjust the position based on your scene
+//   scene.add(backgroundPlane);
+// }
