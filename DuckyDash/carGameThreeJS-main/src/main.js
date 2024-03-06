@@ -156,6 +156,7 @@ function addCubeBody(){
 }
 
 
+
 async function addCube(){
   const gltfLoader = new GLTFLoader().setPath( 'src/assets/' );
 	const carLoaddedd = await gltfLoader.loadAsync( 'duck.glb' );
@@ -207,7 +208,7 @@ function addObstacleBody(){
   }
 }
 
-function addObstacle() {
+/*function addObstacle() {
   const radius = 1; 
   const tubeRadius = 0.7;
   const radialSegments = 16;
@@ -222,8 +223,23 @@ function addObstacle() {
     scene.add(obstacleMesh);
     obstaclesMeshes.push(obstacleMesh);
   }
-}
+}*/
 
+function addObstacle() {
+  const radiusTop = 1;
+  const radiusBottom = 1;
+  const height = 1;
+  const radialSegments = 16;
+  const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
+  const texture = new THREE.TextureLoader().load("src/assets/donut.png");
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+
+  for (let i = 0; i < 1000; i++) {
+    let obstacleMesh = new THREE.Mesh(geometry, material);
+    scene.add(obstacleMesh);
+    obstaclesMeshes.push(obstacleMesh);
+  }
+}
 
 
 function addContactMaterials(){
@@ -253,8 +269,8 @@ function addKeysListener(){
 let laneSwitched = false;
 
 function movePlayer() {
-  const strengthWS = 1000;
-  const laneWidth = 8.5; // Adjust this value based on your desired lane width
+  const strengthWS = 2000;
+  const laneWidth = 6.5; // Adjust this value based on your desired lane width
   const maxCoordinate = 20000; // Set the maximum x-coordinate limit
 
   // Forward movement
