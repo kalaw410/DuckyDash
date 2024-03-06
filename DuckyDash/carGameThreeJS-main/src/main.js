@@ -430,6 +430,8 @@ function restartGame() {
   cubeBody.position.set(0, 2, 0);
   cubeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI / 180 * 180);
 
+  cubeBody.position.z = 50; // Adjust the X position as needed
+
   // Remove obstacles
   for (let i = 0; i < obstaclesBodies.length; i++) {
     world.removeBody(obstaclesBodies[i]);
@@ -450,3 +452,4 @@ function restartGame() {
   // Continue the animation loop
   animate();
 }
+
