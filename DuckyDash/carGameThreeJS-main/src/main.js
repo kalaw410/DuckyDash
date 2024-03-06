@@ -208,7 +208,7 @@ function addObstacleBody(){
   }
 }
 
-/*function addObstacle() {
+function addObstacle() {
   const radius = 1; 
   const tubeRadius = 0.7;
   const radialSegments = 16;
@@ -223,23 +223,23 @@ function addObstacleBody(){
     scene.add(obstacleMesh);
     obstaclesMeshes.push(obstacleMesh);
   }
-}*/
-
-function addObstacle() {
-  const radiusTop = 1;
-  const radiusBottom = 1;
-  const height = 1;
-  const radialSegments = 16;
-  const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
-  const texture = new THREE.TextureLoader().load("src/assets/donut.png");
-  const material = new THREE.MeshBasicMaterial({ map: texture });
-
-  for (let i = 0; i < 1000; i++) {
-    let obstacleMesh = new THREE.Mesh(geometry, material);
-    scene.add(obstacleMesh);
-    obstaclesMeshes.push(obstacleMesh);
-  }
 }
+
+// function addObstacle() {
+//   const radiusTop = 1;
+//   const radiusBottom = 1;
+//   const height = 1;
+//   const radialSegments = 16;
+//   const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
+//   const texture = new THREE.TextureLoader().load("src/assets/donut.png");
+//   const material = new THREE.MeshBasicMaterial({ map: texture });
+
+//   for (let i = 0; i < 1000; i++) {
+//     let obstacleMesh = new THREE.Mesh(geometry, material);
+//     scene.add(obstacleMesh);
+//     obstaclesMeshes.push(obstacleMesh);
+//   }
+// }
 
 
 function addContactMaterials(){
