@@ -344,12 +344,12 @@ async function addBackground(){
 
 	const domeLoaded = await gltfLoader.loadAsync( 'skydome.glb' );
 	let domeMesh = domeLoaded.scene.children[0];
-	domeMesh.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 180 *90);
-	domeMesh.position.set(0, -150, 0);
+	 domeMesh.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 180 *90);
+	domeMesh.position.set(0, -200, -90);
 	domeMesh.scale.set(0.1, 0.1, 0.1);
 	scene.add(domeMesh);
 
-  const light = new THREE.DirectionalLight(0x33F9FF, 5);
+  const light = new THREE.DirectionalLight(0xFFFFFF, 5);
   light.position.set(0, -150, 0);
   scene.add(light);
 }
