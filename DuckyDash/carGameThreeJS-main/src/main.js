@@ -262,8 +262,6 @@ function addObstacleBody() {
   }
 }
 
-
-
 function addObstacle() {
   const radius = 1; 
   const tubeRadius = 0.7;
@@ -297,8 +295,6 @@ function addObstacle2(){
 }
 
 
-
-
 function addContactMaterials(){
   const slippery_ground = new CANNON.ContactMaterial(groundMaterial, slipperyMaterial, {
     friction: 0.00,
@@ -324,6 +320,7 @@ function addKeysListener(){
 
 
 let laneSwitched = false;
+let laneCounter = 1; // 0 for left, 1 for center, 2 for right
 
 function movePlayer() {
   const strengthWS = 3000;
@@ -336,15 +333,17 @@ function movePlayer() {
 
   // Left lane switch
   const strengthAD = 200;
-  if (keyboard[65] && !laneSwitched) {
+  if (keyboard[65] && !laneSwitched && laneCounter > 0) {
     cubeBody.position.x = Math.max(cubeBody.position.x - laneWidth, -maxCoordinate);
-    laneSwitched = true; // Set the flag to true to prevent continuous sliding
+    laneSwitched = true;
+    laneCounter--; // Update the lane counter
   }
 
   // Right lane switch
-  if (keyboard[68] && !laneSwitched) {
+  if (keyboard[68] && !laneSwitched && laneCounter < 2) {
     cubeBody.position.x = Math.min(cubeBody.position.x + laneWidth, maxCoordinate);
-    laneSwitched = true; // Set the flag to true to prevent continuous sliding
+    laneSwitched = true;
+    laneCounter++; // Update the lane counter
   }
 
   // Reset the lane switch flag when the key is released
@@ -358,12 +357,9 @@ function movePlayer() {
   // Limit the movement along the Y axis
   cubeBody.position.y = Math.max(Math.min(cubeBody.position.y, maxCoordinate), 0);
 
-
   // Limit the movement along the Z axis
   cubeBody.position.z = Math.max(Math.min(cubeBody.position.z, maxCoordinate / 2), -maxCoordinate / 2);
 }
-
-
 
 function followPlayer(){
   camera.position.x = cubeThree.position.x;
