@@ -138,7 +138,7 @@ function animate(){
 function addCubeBody(){
   let cubeShape = new CANNON.Box(new CANNON.Vec3(1,1.3,2));
   slipperyMaterial = new CANNON.Material('slippery');
-  cubeBody = new CANNON.Body({ mass: 100,material: slipperyMaterial });
+  cubeBody = new CANNON.Body({ mass: 50,material: slipperyMaterial });
   cubeBody.addShape(cubeShape, new CANNON.Vec3(0,0,-1));
 
   const polyhedronShape = createCustomShape()
@@ -198,9 +198,20 @@ function addObstacleBody(){
     var randomX = randomXOptions[randomXIndex];
 
     let obstacleShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-    obstacleBody = new CANNON.Body({ mass: 1 });
+    obstacleBody = new CANNON.Body({ mass: 0.2});
     obstacleBody.addShape(obstacleShape);
-		obstacleBody.position.set(randomX, 5,-(i+1) * 25);
+
+    if(i<=100){
+      obstacleBody.position.set(randomX, 5,-(i+1) * 25);
+    }
+    else if (i<=600){
+      obstacleBody.position.set(randomX, 5,-(i+1) * 15);
+    }
+    else {
+      obstacleBody.position.set(randomX, 5,-(i+1) * 10);
+    }
+
+		
 
     world.addBody(obstacleBody);
     obstaclesBodies.push(obstacleBody);
