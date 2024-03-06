@@ -194,33 +194,7 @@ function addPlane(){
   scene.add(planeThree);
 }
 
-/*function addObstacleBody(){
-  for (let i = 0; i < 500; i++) {
-    var randomXOptions = [-7, 0, 7];
-    var randomXIndex = Math.floor(Math.random() * randomXOptions.length);
-    var randomX = randomXOptions[randomXIndex];
-
-    let obstacleShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-    obstacleBody = new CANNON.Body({ mass: 0.2});
-    obstacleBody.addShape(obstacleShape);
-
-    if(i<=100){
-      obstacleBody.position.set(randomX, 5,-(i+1) * 25);
-    }
-    else if (i<=600){
-      obstacleBody.position.set(randomX, 5,-(i+1) * 15);
-    }
-    else {
-      obstacleBody.position.set(randomX, 5,-(i+1) * 10);
-    }
-
-    world.addBody(obstacleBody);
-    obstaclesBodies.push(obstacleBody);
-
-  }
-}*/
-
-function addObstacleBody() {
+/*function addObstacleBody() {
   const lanes = [-7, 0, 7];
   const maxObstacles = 500;
   const obstacleSpacing = 40;
@@ -250,7 +224,44 @@ function addObstacleBody() {
     world.addBody(obstacleBody);
     obstaclesBodies.push(obstacleBody);
   }
+}*/
+
+function addObstacleBody() {
+  const lanes = [-7, 0, 7];
+  const maxObstacles = 500;
+  const obstacleSpacing = 40;
+  const maxGap = 4; // Maximum gap size between consecutive obstacles in the same lane
+
+  for (let i = 0; i < maxObstacles; i++) {
+    const randomXIndex = Math.floor(Math.random() * lanes.length);
+    const randomX = lanes[randomXIndex];
+
+    let obstacleShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
+    obstacleBody = new CANNON.Body({ mass: 0.2 });
+    obstacleBody.addShape(obstacleShape);
+
+    // Adjust the spacing based on the obstacle index
+    let obstacleZ;
+    if (i <= 100) {
+      obstacleZ = -(i + 1) * obstacleSpacing;
+    } else if (i <= 600) {
+      obstacleZ = -(i + 1) * (obstacleSpacing / 1.5);
+    } else {
+      obstacleZ = -(i + 1) * (obstacleSpacing / 2);
+    }
+
+    // Introduce randomization to create gaps in the obstacles
+    obstacleZ += (Math.random() * maxGap * 2) - maxGap;
+
+    obstacleBody.linearDamping = 0.5;
+    obstacleBody.angularDamping = 1; // Set angularDamping to 1 to prevent rotation
+
+    obstacleBody.position.set(randomX, 5, obstacleZ);
+    world.addBody(obstacleBody);
+    obstaclesBodies.push(obstacleBody);
+  }
 }
+
 
 
 function addObstacle() {
