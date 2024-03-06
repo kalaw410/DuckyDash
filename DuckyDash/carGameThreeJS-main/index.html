@@ -3,30 +3,33 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Game</title>
-  <style>
-    body { margin: 0; }
-
-    /* center on top */
-    #instructions {
-      position: absolute;
-      top: 10;
-
-      width: 100%;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-
-      color: #ffffff;
-      text-align: center;
-    }
-  </style>
+  <title>Kalaw and Sy | Ducky Dash: Poolside Peril</title>
+  <link href="style.css" rel="stylesheet">
+  
 </head>
 <body>
-  <div id="instructions">
-    (W,A,S,D = Move, F = Cannon Debugger, G = ThreeJS Options)
+  <div class="panel">
+    <div class="game-title">
+      <div class="title">Ducky Dash</div>
+      <div class="byline">Poolside Peril</a></div>
+    </div>
+
+    <table id="controls">
+        <tr>
+          <td>W:</td>
+          <td>Forward</td>
+        </tr>
+        <tr>
+          <td>A:</td>
+          <td>Left lane switch</td>
+        </tr>
+        <tr>
+          <td>D:</td>
+          <td>Right lane switch</td>
+        </tr>
+        
+    </table>
+    <div class="animate-flicker" id="variable-content">Once you collide with a donut, Press space bar to play again</div>
   </div>
 
 

@@ -85,7 +85,7 @@ async function init() {
   addContactMaterials();
 
   addKeysListener();
-	addGUI();
+	//addGUI();
 
   animate()
 }
@@ -193,14 +193,14 @@ function addPlane(){
 
 function addObstacleBody(){
   for (let i = 0; i < 1000; i++) {
-    var randomXOptions = [-5, 0, 5];
+    var randomXOptions = [-7, 0, 7];
     var randomXIndex = Math.floor(Math.random() * randomXOptions.length);
     var randomX = randomXOptions[randomXIndex];
 
     let obstacleShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
     obstacleBody = new CANNON.Body({ mass: 1 });
     obstacleBody.addShape(obstacleShape);
-		obstacleBody.position.set(randomX, 5,-(i+1) * 15);
+		obstacleBody.position.set(randomX, 5,-(i+1) * 25);
 
     world.addBody(obstacleBody);
     obstaclesBodies.push(obstacleBody);
@@ -312,26 +312,6 @@ function followPlayer(){
   camera.position.x = cubeThree.position.x;
   camera.position.y = cubeThree.position.y + 5;
   camera.position.z = cubeThree.position.z + 10;
-}
-
-
-function addGUI(){
-  gui = new GUI();
-  const options = {
-		orbitsControls: false
-	}
-
-  gui.add(options, 'orbitsControls').onChange( value => {
-		if (value){
-			controls.enabled = true;
-			enableFollow = false;
-		}else{
-			controls.enabled = false;
-			enableFollow = true;
-		}
-	});
-  gui.hide();
-
 }
 
 function initCannon() {
