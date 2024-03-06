@@ -82,6 +82,8 @@ async function init() {
   addObstacleBody();
   addObstacle();
 
+  addObstacle2();
+
   addContactMaterials();
 
   addKeysListener();
@@ -211,8 +213,6 @@ function addObstacleBody(){
       obstacleBody.position.set(randomX, 5,-(i+1) * 10);
     }
 
-		
-
     world.addBody(obstacleBody);
     obstaclesBodies.push(obstacleBody);
 
@@ -236,21 +236,55 @@ function addObstacle() {
   }
 }
 
-// function addObstacle() {
-//   const radiusTop = 1;
-//   const radiusBottom = 1;
-//   const height = 1;
-//   const radialSegments = 16;
-//   const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
-//   const texture = new THREE.TextureLoader().load("src/assets/donut.png");
-//   const material = new THREE.MeshBasicMaterial({ map: texture });
+/*function addObstacle2(){
+  let geometry = new THREE.BoxGeometry(2,2,2);
+  const texture = new THREE.TextureLoader().load( "src/assets/obstacle.png" );
 
-//   for (let i = 0; i < 1000; i++) {
-//     let obstacleMesh = new THREE.Mesh(geometry, material);
-//     scene.add(obstacleMesh);
-//     obstaclesMeshes.push(obstacleMesh);
-//   }
-// }
+  let material = new THREE.MeshBasicMaterial({ map: texture});
+
+  let obstacle = new THREE.Mesh(geometry, material);
+
+  for (let i = 0; i < 1000; i++) {
+		let obstacleMesh = obstacle.clone();
+		scene.add(obstacleMesh);
+		obstaclesMeshes.push(obstacleMesh);
+	}
+}*/
+
+function addObstacle2() {
+  let geometry = new THREE.BoxGeometry(2, 2, 2);
+  const texture = new THREE.TextureLoader().load("src/assets/obstacle.png");
+  let material = new THREE.MeshBasicMaterial({ map: texture });
+
+  let obstacle = new THREE.Mesh(geometry, material);
+
+  for (let i = 0; i < 1000; i++) {
+    let obstacleMesh = obstacle.clone();
+
+    // Calculate a different random X position for obstacle2
+    let randomXOptions = [-7, 0, 7];
+    let randomXIndex = Math.floor(Math.random() * randomXOptions.length);
+    let randomX = randomXOptions[randomXIndex];
+
+    // Ensure obstacle2 is at least a certain distance away from obstacle1
+    const minDistance = 5;
+    while (Math.abs(randomX - obstaclesBodies[i].position.x) < minDistance) {
+      randomXIndex = Math.floor(Math.random() * randomXOptions.length);
+      randomX = randomXOptions[randomXIndex];
+    }
+
+    // Set the initial Y position of obstacle2
+    obstacleMesh.position.set(randomX, 0, -(i + 1) * 15);
+
+    // Adjust the Y position based on your preferences
+    obstacleMesh.position.y = Math.max(obstacleMesh.position.y, 2);
+
+    scene.add(obstacleMesh);
+    obstaclesMeshes.push(obstacleMesh);
+  }
+}
+
+
 
 
 function addContactMaterials(){
@@ -280,7 +314,7 @@ function addKeysListener(){
 let laneSwitched = false;
 
 function movePlayer() {
-  const strengthWS = 5000;
+  const strengthWS = 3000;
   const laneWidth = 6.5; // Adjust this value based on your desired lane width
   const maxCoordinate = 20000; // Set the maximum x-coordinate limit
 
@@ -409,6 +443,8 @@ function restartGame() {
   // Add new obstacles
   addObstacleBody();
   addObstacle();
+
+  addObstacle2();
 
   // Continue the animation loop
   animate();
