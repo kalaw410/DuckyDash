@@ -15,7 +15,7 @@ let controls;
 let gui;
 
 // show and move cube
-let cubeThree,cubeThree1,cubeThree2,cubeThree3, cubeThree4, cubeThree5, cubeThree6;
+let cubeThree,cubeThree1,cubeThree2;
 let keyboard = {};
 
 // camera follow player
@@ -89,7 +89,11 @@ async function init() {
   animate()
 }
 
+let gameState = "running"; // "running" or "stopped"
+
 function animate(){
+  if (gameState === "stopped") return; // Stop the animation loop when the game is stopped
+
 	renderer.render(scene, camera);
 
   movePlayer();
@@ -115,6 +119,16 @@ function animate(){
   for (let i = 0; i < obstaclesBodies.length; i++) {
     obstaclesMeshes[i].position.copy(obstaclesBodies[i].position);
 		obstaclesMeshes[i].quaternion.copy(obstaclesBodies[i].quaternion);
+
+    // Check for collision and stop the game if collision occurs
+    const playerBox = new THREE.Box3().setFromObject(cubeThree);
+    const obstacleBox = new THREE.Box3().setFromObject(obstaclesMeshes[i]);
+
+    if (playerBox.intersectsBox(obstacleBox)) {
+      gameState = "stopped";
+      console.log("Game Over!");
+      return;
+    }
 	}
 
 	requestAnimationFrame(animate);
@@ -352,4 +366,38 @@ async function addBackground(){
   const light = new THREE.DirectionalLight(0xFFFFFF, 5);
   light.position.set(0, -150, 0);
   scene.add(light);
+}
+
+// Add event listener for the space bar key
+window.addEventListener('keydown', function(event) {
+  if (event.keyCode === 32 && gameState === 'stopped') {
+    restartGame();
+  }
+}, false);
+
+// Function to restart the game
+function restartGame() {
+  // Reset game state
+  gameState = 'running';
+
+  // Reset cube position and rotation
+  cubeBody.position.set(0, 2, 0);
+  cubeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI / 180 * 180);
+
+  // Remove obstacles
+  for (let i = 0; i < obstaclesBodies.length; i++) {
+    world.removeBody(obstaclesBodies[i]);
+    scene.remove(obstaclesMeshes[i]);
+  }
+
+  // Clear arrays
+  obstaclesBodies = [];
+  obstaclesMeshes = [];
+
+  // Add new obstacles
+  addObstacleBody();
+  addObstacle();
+
+  // Continue the animation loop
+  animate();
 }
